@@ -53,8 +53,7 @@ def generate_light_leak_mask(shape, faces=None, num_leaks=3):
             shape_type = np.random.choice(['ellipse', 'streak', 'radial'])
 
             if shape_type == 'ellipse':
-                # Increased ellipse axes sizes for bigger leaks
-                axes = (np.random.randint(w // 5, w // 2), np.random.randint(h // 5, h // 2))
+                axes = (np.random.randint(w//10, w//3), np.random.randint(h//10, h//3))
                 angle = np.random.uniform(0, 360)
                 cv2.ellipse(temp, (cx, cy), axes, angle, 0, 360, color=1, thickness=-1)
 
@@ -62,8 +61,7 @@ def generate_light_leak_mask(shape, faces=None, num_leaks=3):
                 orientation = np.random.choice(['horizontal', 'vertical'])
                 temp_streak = np.zeros_like(temp)
 
-                # Increased streak length for larger leaks
-                length = np.random.randint(w // 3, int(w * 0.9))
+                length = np.random.randint(w // 4, w)
                 thickness = np.random.randint(20, 80)
 
                 if orientation == 'horizontal':
@@ -82,17 +80,16 @@ def generate_light_leak_mask(shape, faces=None, num_leaks=3):
 
             elif shape_type == 'radial':
                 radial = np.zeros_like(temp)
-                # Increased radial circle size range
-                cv2.circle(radial, (cx, cy), np.random.randint(h // 6, int(h * 0.6)), color=1, thickness=-1)
-                temp = gaussian_filter(radial, sigma=np.random.uniform(80, 200))  # bigger blur range
+                cv2.circle(radial, (cx, cy), np.random.randint(h//8, h//2), color=1, thickness=-1)
+                temp = gaussian_filter(radial, sigma=np.random.uniform(60, 160))
 
             # Only add if the shape is fully outside faces
             if np.all(temp * face_mask == temp):
-                final_mask += temp * np.random.uniform(0.7, 1.5)
+                final_mask += temp * np.random.uniform(0.5, 1.2)
                 break
 
-    blurred = gaussian_filter(final_mask, sigma=np.random.uniform(80, 220))  # increased blur range for bigger softer leaks
-    return np.clip(blurred / (blurred.max() + 1e-8) * np.random.uniform(0.5, 1.1), 0, 1)
+    blurred = gaussian_filter(final_mask, sigma=np.random.uniform(60, 180))
+    return np.clip(blurred / (blurred.max() + 1e-8) * np.random.uniform(0.4, 0.9), 0, 1)
 
 def generate_colored_leak(mask):
     h, w = mask.shape
@@ -100,7 +97,7 @@ def generate_colored_leak(mask):
     color_a, color_b = random_color()
     t = np.random.rand()
     gradient_color = color_a + t * (color_b - color_a)
-    gradient_color = np.clip(gradient_color * np.random.uniform(1.0, 1.8), 0, 1)
+    gradient_color = np.clip(gradient_color * np.random.uniform(1.0, 1.6), 0, 1)
     noise = np.random.normal(scale=np.random.uniform(0.01, 0.04), size=mask.shape)
     return np.clip(mask * gradient_color + noise, 0, 1)
 
