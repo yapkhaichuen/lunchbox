@@ -141,7 +141,7 @@ def apply_light_leak_pil(file_bytes):
     return output_bytes.getvalue(), len(faces)
 
 # -------- STREAMLIT UI --------
-st.set_page_config(page_title="Film Effects Generator", layout="wide")
+st.set_page_config(page_title="Film Effects Generator")
 st.title("Film Effects Generator")
 st.markdown("Upload multiple images to apply artistic light leak effects. Faces will be detected with machine learning and avoided (beta, might not be entirely accurate). Enjoy light leaks, film burn and more random surprises. Image manipulation tool of the Lunchbox toolkit.")
 
