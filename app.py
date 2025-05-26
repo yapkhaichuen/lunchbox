@@ -1,20 +1,3 @@
-# -------- PATCH: Streamlit Watcher Safety for torch.classes --------
-import os
-os.environ["STREAMLIT_WATCHDOG"] = "false"
-
-import sys
-import streamlit.watcher.local_sources_watcher as lsw
-
-# Monkey patch to safely handle module path extraction errors
-original_extract_paths = lsw.extract_paths
-def safe_extract_paths(module):
-    try:
-        return original_extract_paths(module)
-    except Exception:
-        return []
-lsw.extract_paths = safe_extract_paths
-
-# -------- MAIN MODULES --------
 import streamlit as st
 import cv2
 import numpy as np
@@ -48,6 +31,7 @@ def random_color():
         np.array([np.random.uniform(0.6, 0.7), 0.0, np.random.uniform(0.2, 0.3)]),  # Dull Red
         np.array([0.9, 0.4, 0.6]),  # Pink, rare
     ]
+    # Weighted choice to reduce pink
     weights = [1] * 10 + [0.1]
     idx = np.random.choice(len(palette), p=np.array(weights) / np.sum(weights))
     return palette[idx], palette[np.random.randint(len(palette) - 1)]
