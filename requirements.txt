@@ -1,7 +1,0 @@
-facenet_pytorch
-numpy
-opencv_python_headless
-Pillow
-scipy
-streamlit
-torch
