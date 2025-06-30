@@ -26,4 +26,4 @@ jobs:
 
     - name: 🕵️ Run S&P500 signal checker with explanations
       run: |
-        python ./signals/check_signals.py
+        python signals/check_signals.py
